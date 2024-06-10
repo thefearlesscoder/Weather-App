@@ -79,9 +79,13 @@ async function fetchUserWeatherInfo(coordinates) {
         userInfoContainer.classList.add("active");
         renderWeatherInfo(data);
     }
-    catch(err) {
-        loadingScreen.classList.remove("active");
-        //HW
+    catch(error) {
+            // console.log("User - Api Fetch Error", error.message);
+            loadingScreen.classList.remove("active");
+            apiErrorContainer.classList.add("active");
+            apiErrorImg.style.display = "none";
+            apiErrorMessage.innerText = `Error: ${error?.message}`;
+            apiErrorBtn.addEventListener("click", fetchUserWeatherInfo);
 
     }
 
@@ -133,6 +137,24 @@ function showPosition(position) {
 
 }
 
+// Handle any errors
+function showError(error) {
+    switch (error.code) {
+      case error.PERMISSION_DENIED:
+        messageText.innerText = "You denied the request for Geolocation.";
+        break;
+      case error.POSITION_UNAVAILABLE:
+        messageText.innerText = "Location information is unavailable.";
+        break;
+      case error.TIMEOUT:
+        messageText.innerText = "The request to get user location timed out.";
+        break;
+      case error.UNKNOWN_ERROR:
+        messageText.innerText = "An unknown error occurred.";
+        break;
+    }
+  }
+
 const grantAccessButton = document.querySelector("[data-grantAccess]");
 grantAccessButton.addEventListener("click", getLocation);
 
@@ -163,6 +185,10 @@ async function fetchSearchWeatherInfo(city) {
         renderWeatherInfo(data);
     }
     catch(err) {
-        //hW
+            // console.log("Search - Api Fetch Error", error.message);
+            loadingScreen.classList.remove("active");
+            apiErrorContainer.classList.add("active");
+            apiErrorMessage.innerText = `${error?.message}`;
+            apiErrorBtn.style.display = "none";
     }
 }
